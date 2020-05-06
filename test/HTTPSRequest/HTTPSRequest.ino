@@ -72,6 +72,8 @@ void setup() {
                "User-Agent: BuildFailureDetectorESP8266\r\n" +
                "Connection: close\r\n\r\n");
 
+  
+
   Serial.println("request sent");
   while (client.connected()) {
     String line = client.readStringUntil('\n');    
@@ -97,4 +99,5 @@ void setup() {
 }
 
 void loop() {
+
 }
