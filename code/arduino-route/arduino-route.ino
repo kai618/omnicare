@@ -1,9 +1,26 @@
-void setup() {
-  // put your setup code here, to run once:
 
+#include <AltSoftSerial.h>
+
+AltSoftSerial altSerial;
+
+String str;
+
+void setup() {
+  Serial.begin(9600);
+  Serial.println("Start Arduino Route");
+  altSerial.begin(9600);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-
+  
+  while (altSerial.available() > 0) {
+    char c = altSerial.read();
+    str += c;    
+  }
+  while (Serial.available() > 0) {
+    char c = Serial.read();
+    str += c;    
+  }
+  Serial.print(str);
+  str = "";
 }
