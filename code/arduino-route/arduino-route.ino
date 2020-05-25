@@ -1,26 +1,55 @@
-
 #include <AltSoftSerial.h>
+#include <ArduinoQueue.h>
 
-AltSoftSerial altSerial;
+AltSoftSerial altSerial; // Rx-8 Tx-9
+ArduinoQueue<String> dataQueue(100);
 
-String str;
+bool ableToSend = false;
 
 void setup() {
-  Serial.begin(9600);
-  Serial.println("Start Arduino Route");
+  Serial.begin(115200);
   altSerial.begin(9600);
 }
 
-void loop() {
+void loop() {  
+  checkPortSerial();
+  checkPortRadio();
+  checkSignalFromNodeMCU();
+}
+
+void checkPortSerial() {
+  if (!altSerial.available()) return;
   
+  String data = "";
+  char c;
   while (altSerial.available() > 0) {
-    char c = altSerial.read();
-    str += c;    
+    c = altSerial.read();
+    data += c;
+    delay(1);  
   }
-  while (Serial.available() > 0) {
-    char c = Serial.read();
-    str += c;    
+  dataQueue.enqueue(data);
+}
+
+void checkPortRadio() {
+  // TODO
+}
+
+void checkSignalFromNodeMCU(){
+  if (!Serial.available()) return;
+
+  char c = Serial.read();
+  delay(1);
+  if (c == '1') ableToSend = true;
+  
+  //remove other bytes to avoid bugs (if any)
+  while(Serial.available()) {
+    Serial.read(); 
+    delay(1);
   }
-  Serial.print(str);
-  str = "";
+  
+  if (dataQueue.isEmpty()) return;
+  if (ableToSend) {
+    Serial.print(dataQueue.dequeue());
+    ableToSend = false;
+  }  
 }
