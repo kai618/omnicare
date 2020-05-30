@@ -31,13 +31,13 @@ void checkSignalFromArduinoRoute() {
 
 void sendRequest(String data) {
   lightTheSun();
-  delay(1000);
+  delay(500);
   shadowTheSun();
   sendYesBackToArduinoRoute();
 }
 
 void sendYesBackToArduinoRoute() {
-  Serial.print('1');
+  Serial.print('y');
 }
 
 void lightTheSun() {
