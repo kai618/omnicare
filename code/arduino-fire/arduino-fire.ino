@@ -77,7 +77,7 @@ void loop() {
 // --------------------------------- Input Sensors buttons Servo
 
 void sendSignal(char mode) {
-  String signal = "FIR ";
+  String signal = "FIRE ";
   signal += mode;
   Serial.println(signal);
 }

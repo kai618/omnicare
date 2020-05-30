@@ -6,11 +6,13 @@ ArduinoQueue<String> dataQueue(50);
 
 bool ableToSend = false;
 
-void setup() {
-  
+String serialPin =  "0 ";
+String radioPin =   "1 ";
+
+void setup() {  
   Serial.begin(115200);
   altSerial.begin(9600);
-  Serial.println("Route");
+//  Serial.println("ArduinoRoute started");
 }
 
 void loop() {  
@@ -31,6 +33,7 @@ void checkPortSerial() {
     delay(5);
   }
   if (dataQueue.isFull()) dataQueue.dequeue();
+  data = serialPin + data;
   dataQueue.enqueue(data);
 
 ////  for testing only
