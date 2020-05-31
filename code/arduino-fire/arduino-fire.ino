@@ -4,11 +4,13 @@
 //Interval
 const unsigned int interval = 10000;
 
+String nodeName = "FIRE";
+
 // --------------------------------- Components
 
 // pin input
 #define button 2
-#define servo 3
+#define servo 8
 #define gasSen A5
 #define flameSen A0
 
@@ -54,7 +56,7 @@ Chrono txTimer;
 // --------------------------------- Main
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   delay(100);
 
   setupServo();
@@ -77,8 +79,7 @@ void loop() {
 // --------------------------------- Input Sensors buttons Servo
 
 void sendSignal(char mode) {
-  String signal = "FIRE ";
-  signal += mode;
+  String signal = nodeName + " " + mode;
   Serial.println(signal);
 }
 
@@ -161,6 +162,11 @@ void setMode(char mode) {
   txTimer.restart();
 }
 
+void setupServo() {
+  sv.attach(servo);
+  angle = sv.read();
+}
+
 void scoutArea(int slowness) {
   angle += svStep;
   sv.write(angle);
@@ -170,7 +176,7 @@ void scoutArea(int slowness) {
 
 void getHandBack() {
   if (angle > 0) {
-    sv.write(angle--);
+    sv.write(--angle);
     delay(20);
   }
 }
@@ -185,11 +191,6 @@ bool detectFlame() {
   // Serial.println(analogRead(flameSen));
   if (analogRead(flameSen) < flameLimit) return true;
   return false;
-}
-
-void setupServo() {
-  sv.attach(servo);
-  angle = sv.read();
 }
 
 // --------------------------------- Output LED Buzzer
