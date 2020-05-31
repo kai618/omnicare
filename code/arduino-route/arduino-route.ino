@@ -51,14 +51,14 @@ void checkSignalFromNodeMCU(){
     ableToSend = true;
     //remove other bytes (if any) to avoid bugs
     while(Serial.available()) {
-      Serial.read(); 
+      Serial.read();
       delay(5);
     }
   }
   
   if (dataQueue.isEmpty()) return;
   if (ableToSend) {
-    Serial.println(dataQueue.dequeue());
+    Serial.print(dataQueue.dequeue());
     Serial.flush();
     ableToSend = false;
   }  

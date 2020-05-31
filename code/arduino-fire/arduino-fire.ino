@@ -44,12 +44,12 @@ int angle = 0;
 int svStep = 1;
 
 //Mode
-const char OffMode = '0';
-const char SafeMode = '1';
-const char GasMode = '2';
-const char FireMode = '3';
+String OffMode = "OFF";
+String SafeMode = "SAFE";
+String GasMode = "SMOKE";
+String FireMode = "FIRE";
 
-char nowMode = '0';
+String nowMode = OffMode;
 
 Chrono txTimer;
 
@@ -78,16 +78,15 @@ void loop() {
 
 // --------------------------------- Input Sensors buttons Servo
 
-void sendSignal(char mode) {
+void sendSignal(String mode) {  
   String signal = nodeName + " " + mode;
-  Serial.println(signal);
+  Serial.print(signal);
+  txTimer.restart();
 }
 
 void repeatSignal() {
-  if(txTimer.hasPassed(interval)) {
-    sendSignal(nowMode);
-    txTimer.restart();
-  }
+  if(txTimer.hasPassed(interval)) sendSignal(nowMode);
+  
 }
 
 void checkButton() {
@@ -156,10 +155,9 @@ void setFireMode() {
   delay(20);
 }
 
-void setMode(char mode) {
+void setMode(String mode) {
   nowMode = mode;
   sendSignal(mode);
-  txTimer.restart();
 }
 
 void setupServo() {
@@ -196,12 +194,10 @@ bool detectFlame() {
 // --------------------------------- Output LED Buzzer
 
 void changeOutputMode() {
-  switch (nowMode) {
-    case OffMode : setOffModeOutput(); break;
-    case SafeMode : setSafeModeOutput(); break;
-    case GasMode : setGasModeOutput(); break;
-    case FireMode : setFireModeOutput(); break;
-  }
+  if (nowMode == OffMode) setOffModeOutput();
+  else if (nowMode == SafeMode) setSafeModeOutput();
+  else if (nowMode == GasMode) setGasModeOutput();
+  else if (nowMode == FireMode) setFireModeOutput();   
 }
 void setOffModeOutput() {
   setColor(0, 0, 0);

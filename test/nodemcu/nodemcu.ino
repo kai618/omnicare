@@ -21,6 +21,8 @@ String updateDataUrl = "/api/v1/module/";
 String token = "";
 
 // ---------------------------------- Serial
+Chrono timer;
+const unsigned int interval = 10000;
 
 
 void setup() {
@@ -42,7 +44,10 @@ void loop() {
 }
 
 void checkSignalFromArduinoRoute() {
-  if (!Serial.available()) return;
+  if (!Serial.available()) {
+    if (timer.hasPassed(interval)) sendYesBackToArduinoRoute();    
+    return;
+  }
   String data = "";
   char c;
   while (Serial.available() > 0) {
@@ -71,6 +76,7 @@ void updateDataRequest(String data) {
   String url = updateDataUrl + WiFi.macAddress();
   String fullData = token + " " + data;
 
+  Serial.println(fullData);
   lightTheMoon();
   bool result = sendHttpsPost(sClient, host, port, url, fullData);
   shadowTheMoon();  
@@ -78,7 +84,8 @@ void updateDataRequest(String data) {
 }
 
 void sendYesBackToArduinoRoute() {
-  Serial.print('1');
+  Serial.print('y');
+  timer.restart();
 }
 
 String sendHttpsGet(WiFiClientSecure httpsClient, String host, int port, String url) {  
@@ -87,15 +94,15 @@ String sendHttpsGet(WiFiClientSecure httpsClient, String host, int port, String 
     httpsClient.println("Host: " + host);
     httpsClient.println("User-Agent: ESP8266/Hieu");
     httpsClient.println("Connection: close\r\n");   
-    Serial.println("--Sent GET request to " + host);
+//    Serial.println("--Sent GET request to " + host);
 
     String response = httpsClient.readString();
     int bodypos = response.indexOf("\r\n\r\n") + 4;
-    Serial.println("--GET request ended successfully");
+//    Serial.println("--GET request ended successfully");
     return response.substring(bodypos);
   }
   else {
-    Serial.println("--Connection failed!!!");
+//    Serial.println("--Connection failed!!!");
     return "";
   }
 }
@@ -114,19 +121,19 @@ bool sendHttpsPost(WiFiClientSecure httpsClient, String host, int port, String u
     delay(10);    
     return true;
     
-    Serial.println("--Sent POST request to " + host);
+//    Serial.println("--Sent POST request to " + host);
     
-    String response = httpsClient.readString();
-    int bodypos =  response.indexOf("\r\n\r\n") + 4;
+//    String response = httpsClient.readString();
+//    int bodypos =  response.indexOf("\r\n\r\n") + 4;
     
-    Serial.println("--POST request ended successfully");
-    return response.substring(bodypos);
+//    Serial.println("--POST request ended successfully");
+//    return response.substring(bodypos);
   }
   else { 
     return false;
     
-    Serial.println("--Connection failed!!!");
-    return "ERROR";    
+//    Serial.println("--Connection failed!!!");
+//    return "ERROR";    
   }
 }
 
@@ -135,18 +142,18 @@ void connectWifi(String ssid, String pass) {
   WiFi.setAutoConnect(false);
   WiFi.setPhyMode(WIFI_PHY_MODE_11G);
   
-  Serial.println("--WiFi - connecting to " + ssid); 
+//  Serial.println("--WiFi - connecting to " + ssid); 
   
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid.c_str(), pass.c_str());  
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
-    Serial.print(".");
+//    Serial.print(".");
   }
-  Serial.println("");
-  Serial.print("--WiFi connected. IP address: ");
-  Serial.println(WiFi.localIP());
-  Serial.println("");
+//  Serial.println("");
+//  Serial.print("--WiFi connected. IP address: ");
+//  Serial.println(WiFi.localIP());
+//  Serial.println("");
 }
   
 void checkFingerprintMatch(WiFiClientSecure httpsClient, String host, int port, String fingerprint) {
@@ -161,11 +168,11 @@ void checkFingerprintMatch(WiFiClientSecure httpsClient, String host, int port, 
 
 // ------------- Token Read/Write
 void getTokenFromFlash() {
-  // Flash storage has been broken since THCNTT2. Sorry :(
+  // My Flash storage has been broken since THCNTT2
 }
 
 void persistTokenToFlash() {
-  // Flash storage has been broken since THCNTT2
+  // My Flash storage has been broken since THCNTT2
 }
 
 
