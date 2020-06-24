@@ -19,7 +19,7 @@ const byte address[6] = "kaiRF";
 void setup() {  
   Serial.begin(115200);
   altSerial.begin(9600);
-  Serial.println("ArduinoRoute started");
+//  Serial.println("ArduinoRoute started");
 
   setupRF24();
 }
@@ -47,16 +47,21 @@ void checkPortSerial() {
     data += c;
     delay(5);
   }
-  if (dataQueue.isFull()) dataQueue.dequeue();
+  
   data = serialPin + data;
+  if (dataQueue.isFull()) dataQueue.dequeue();
   dataQueue.enqueue(data);
 }
 
 void checkPortRadio() {
   if (radio.available()) {
-    char text[32] = "";
-    radio.read(&text, sizeof(text));
-    Serial.println(text);
+    char sig[32] = "";
+    radio.read(&sig, sizeof(sig));    
+    String data = String(sig);
+    data = radioPin + data;
+    
+    if (dataQueue.isFull()) dataQueue.dequeue();
+    dataQueue.enqueue(data);
   }
 }
 
