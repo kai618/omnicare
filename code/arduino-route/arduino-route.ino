@@ -1,6 +1,9 @@
 #include <AltSoftSerial.h>
 #include <ArduinoQueue.h>
 
+#include <SPI.h>
+#include <RF24.h>
+
 AltSoftSerial altSerial; // Rx-8 Tx-9
 ArduinoQueue<String> dataQueue(50);
 
@@ -9,10 +12,16 @@ bool ableToSend = false;
 String serialPin =  "0 ";
 String radioPin =   "1 ";
 
+// RF
+RF24 radio(2, 3); // CE CSN
+const byte address[6] = "kaiRF";
+
 void setup() {  
   Serial.begin(115200);
   altSerial.begin(9600);
-//  Serial.println("ArduinoRoute started");
+  Serial.println("ArduinoRoute started");
+
+  setupRF24();
 }
 
 void loop() {  
@@ -21,7 +30,13 @@ void loop() {
   checkSignalFromNodeMCU();
 }
 
-int a = 0;
+void setupRF24() {
+  radio.begin();
+  radio.openReadingPipe(0, address);
+  radio.setPALevel(RF24_PA_MIN);
+  radio.startListening();
+}
+
 void checkPortSerial() {
   if (!altSerial.available()) return;
   
@@ -35,15 +50,14 @@ void checkPortSerial() {
   if (dataQueue.isFull()) dataQueue.dequeue();
   data = serialPin + data;
   dataQueue.enqueue(data);
-
-////  for testing only
-//  if (dataQueue.isFull()) dataQueue.dequeue();
-//  dataQueue.enqueue(String(a++));
-//  delay(2000);
 }
 
 void checkPortRadio() {
-  // TODO
+  if (radio.available()) {
+    char text[32] = "";
+    radio.read(&text, sizeof(text));
+    Serial.println(text);
+  }
 }
 
 void checkSignalFromNodeMCU(){
