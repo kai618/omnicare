@@ -28,7 +28,7 @@ bool alertStateFire = true;
 unsigned long spacingFire = 200;
 
 // Threshold
-const int gasLimit = 600;
+const int gasLimit = 200;
 const int flameLimit = 150;
 
 // State
@@ -180,7 +180,7 @@ void getHandBack() {
 }
 
 bool detectGas() {
-  // Serial.println(analogRead(gasSen));
+//   Serial.println(analogRead(gasSen));
   if (analogRead(gasSen) > gasLimit) return true;
   return false;
 }

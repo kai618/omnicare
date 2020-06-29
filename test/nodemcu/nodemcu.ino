@@ -8,8 +8,11 @@ String retrieverPw = "";
 String ssidUrl = "http://192.168.43.1:8080/ssid";
 String pwUrl = "http://192.168.43.1:8080/password";
 
-String ssid = "GHC_";
-String password = "12356789";
+//String ssid = "HSU_Students";
+//String password = "dhhs12cnvch";
+
+String ssid = "Nokia 7.2";
+String password = "123456789";
 
 // ---------------------------------- HTTPS API
 WiFiClientSecure sClient; // to create HTTPS requests
