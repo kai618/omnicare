@@ -1,7 +1,7 @@
 #include <ThreeWire.h>  
 #include <RtcDS1302.h>
 
-ThreeWire myWire(6,7,8); // IO, SCLK, CE
+ThreeWire myWire(5,4,6); // DAT, CLK, RST
 RtcDS1302<ThreeWire> Rtc(myWire);
 
 void setup() {

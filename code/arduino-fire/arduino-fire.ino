@@ -181,7 +181,7 @@ void getHandBack() {
 
 bool detectGas() {
 //   Serial.println(analogRead(gasSen));
-  if (analogRead(gasSen) > gasLimit) return true;
+//  if (analogRead(gasSen) > gasLimit) return true;
   return false;
 }
 

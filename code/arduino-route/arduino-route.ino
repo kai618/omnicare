@@ -4,6 +4,9 @@
 #include <SPI.h>
 #include <RF24.h>
 
+#include <ThreeWire.h>  
+#include <RtcDS1302.h>
+
 AltSoftSerial altSerial; // Rx-8 Tx-9
 ArduinoQueue<String> dataQueue(50);
 
@@ -16,11 +19,15 @@ String radioPin =   "1 ";
 RF24 radio(2, 3); // CE CSN
 const byte address[6] = "kaiRF";
 
+// RTC
+ThreeWire myWire(5,4,6); // DAT, CLK, RST
+RtcDS1302<ThreeWire> Rtc(myWire);
+
 void setup() {  
   Serial.begin(115200);
   altSerial.begin(9600);
 //  Serial.println("ArduinoRoute started");
-
+  setupRTC();
   setupRF24();
 }
 
@@ -28,6 +35,20 @@ void loop() {
   checkPortSerial();
   checkPortRadio();
   checkSignalFromNodeMCU();
+}
+
+void setupRTC() {
+  Rtc.Begin();  
+  
+//  Serial.println(Rtc.GetDateTime().Epoch32Time());  
+//  RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);  
+//  Serial.println(compiled.Epoch32Time());  
+//  Rtc.SetDateTime(compiled);  
+//  Serial.println(Rtc.GetDateTime().Epoch32Time());     
+}
+
+String getEpochStr() {
+   return String(Rtc.GetDateTime().Epoch32Time()) + " ";
 }
 
 void setupRF24() {
@@ -48,7 +69,8 @@ void checkPortSerial() {
     delay(5);
   }
   
-  data = serialPin + data;
+  data = serialPin + getEpochStr() + data;
+//  Serial.println(data); // set baud rate of Serial Monitor to 115200
   if (dataQueue.isFull()) dataQueue.dequeue();
   dataQueue.enqueue(data);
 }
@@ -58,8 +80,9 @@ void checkPortRadio() {
     char sig[32] = "";
     radio.read(&sig, sizeof(sig));    
     String data = String(sig);
-    data = radioPin + data;
     
+    data = radioPin + getEpochStr() + data;
+//    Serial.println(data); // set baud rate of Serial Monitor to 115200
     if (dataQueue.isFull()) dataQueue.dequeue();
     dataQueue.enqueue(data);
   }
