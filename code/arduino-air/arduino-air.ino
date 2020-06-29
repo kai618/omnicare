@@ -64,6 +64,12 @@ void getTempHumid() {
   humid = dht.readHumidity();
 }
 
+float roundData(float data) {
+  float dec = 100.0;
+  int a = (int) (data * dec);
+  return (float) a / dec;
+}
+
 void displayLCD() {
   lcd.setCursor(8, 0);
   lcd.print(temp);
