@@ -48,7 +48,8 @@ void setupRTC() {
 }
 
 String getEpochStr() {
-   return String(Rtc.GetDateTime().Epoch32Time()) + " ";
+  // - 25200 to get UTC+0
+   return String(Rtc.GetDateTime().Epoch32Time() - 25140) + " ";
 }
 
 void setupRF24() {
