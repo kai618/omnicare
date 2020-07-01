@@ -81,4 +81,5 @@ void sendSignal() {
   String signal = nodeName + " " + String(temp) + delimiter + String(humid);
   Serial.print(signal);
   Serial.flush();
+  delay(50);
 }

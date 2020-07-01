@@ -32,7 +32,9 @@ void loop() {
 void sendSignal(String mode) {  
   String signal = nodeName + " " + mode;
   Serial.print(signal);
+  Serial.flush();
   txTimer.restart();
+  delay(50);
 }
 
 void repeatSignal() {
