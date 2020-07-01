@@ -29,7 +29,7 @@ unsigned long spacingFire = 200;
 
 // Threshold
 const int gasLimit = 200;
-const int flameLimit = 150;
+const int flameLimit = 600;
 
 // State
 bool mainState = false;  //true = on, false = off
@@ -188,7 +188,7 @@ bool detectGas() {
 }
 
 bool detectFlame() {
-  // Serial.println(analogRead(flameSen));
+//  Serial.println(analogRead(flameSen));
   if (analogRead(flameSen) < flameLimit) return true;
   return false;
 }

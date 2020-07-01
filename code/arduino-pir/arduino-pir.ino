@@ -25,7 +25,6 @@ void setup() {
 
 void loop() {
   observeMotion();
-  Serial.println(nowMode);
   repeatSignal();
 }
 
