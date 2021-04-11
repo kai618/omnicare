@@ -1,6 +1,6 @@
 # OmniCare
 The last project in the series of THCNTT courses.
-I made 5 ArduinoUNOs + 1 NodeMCU communicate to each other via serial or RF transmition.
+I made 5 ArduinoUNOs + 1 NodeMCU communicate to each other via serial or RF transmission.
 
 ## Demo Video
 https://youtu.be/vEuUIx6Lyak
